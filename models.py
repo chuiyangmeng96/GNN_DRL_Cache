@@ -9,7 +9,7 @@ import torch.autograd as autograd
 from torch.autograd import Variable
 from utils import *
 from graph_models import GraphDensenet
-import numpy as np
+
 
 class Actor(nn.Module):
     def __init__(self, s_dim, hidden_size, a_dim):
