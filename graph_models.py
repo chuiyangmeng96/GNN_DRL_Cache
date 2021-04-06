@@ -121,7 +121,7 @@ class GDB(nn.Module):
 
 class GraphDensenet(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, depth, growth_rate, reduction,
-                 bottleneck=True, dropRate=0.0, num_head, slope_alpha=0.2, bias=True):
+                 bottleneck=True, dropRate=0.0, num_head=3, slope_alpha=0.2, bias=True):
         super(GraphDensenet, self).__init__()
         self.MLP = MLP(input_size, hidden_size, output_size)
         in_channels = 2 * growth_rate
