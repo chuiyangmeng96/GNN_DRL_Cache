@@ -93,6 +93,7 @@ class DDPG(nn.Module):
         state = Variable(torch.from_numpy(state).float().unsqueeze(0))
         action = self.actor.forward(state)
         action = action.detach().numpy()[0, 0]
+        action =  # need revision
         return action
 
     def update(self, batch_size):
