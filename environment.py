@@ -823,7 +823,7 @@ class Environ:
         return total_delay
 
     def action_space(self): # action_matrix is a matrix of size self.vehicle_num * (self.vehicle_num + self.RSU_num + 1)
-        action = 1
+        action_matrix = 1
         return action_matrix
 
     def immediate_reward(self, action_matrix):
