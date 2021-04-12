@@ -22,12 +22,12 @@ class Actor(nn.Module):
         self.fc3 = nn.Linear(hidden_size, a_dim)
         self.fc3.weight.data.normal_(0, 0.1)
         self.relu = nn.LeakyReLU()
-        self.tanh = nn.Tanh()
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
-        x = self.tanh(self.fc3(x))
+        x = self.sigmoid(self.fc3(x))
 
         actions_value = x   # need modification
         return actions_value
