@@ -826,6 +826,7 @@ class Environ:
         action_matrix = np.random.rand(np.zeros(self.vehicle_num))
         return action_matrix
 
+
     def immediate_reward(self, action_matrix):
         total_delay = self.delay_func(action_matrix)
         reward_arr = np.zeros((self.vehicle_num, self.content_num))
