@@ -824,7 +824,6 @@ class Environ:
 
     def action_space(self): # action_matrix is a matrix of size self.vehicle_num * (self.vehicle_num + self.RSU_num + 1)
         action_matrix = np.zeros(self.vehicle_num)
-
         return action_matrix
 
     def immediate_reward(self, action_matrix):
