@@ -54,6 +54,21 @@ class Critic(nn.Module):
         q_value = x   # need modification
         return q_value
 
+class MACritic(nn.Module):
+    def __init__(self, num_agent, s_dim, hidden_size, a_dim):
+        super(MACritic, self).__init__()
+        obs_dim = s_dim * num_agent
+        act_dim = a_dim * num_agent
+        self.fc1 = nn.Linear(obs_dim, hidden_size)
+        self.fc1.weight.data.normal_(0, 0.1)
+        self.fc2 = nn.Linear(hidden_size)
+
+        self.relu = nn.LeakyReLU()
+
+
+    def forward(self, state, action):
+
+
 
 class DDPG(nn.Module):
     def __init__(self, gh_input_size, gh_hidden_size, gh_output_size, gh_depth, gh_growth_rate, gh_reduction, gh_bottleneck,
