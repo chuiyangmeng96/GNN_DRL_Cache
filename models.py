@@ -62,7 +62,6 @@ class MACritic(nn.Module):
         self.fc1 = nn.Linear(obs_dim, hidden_size)
         self.fc1.weight.data.normal_(0, 0.1)
         self.fc2 = nn.Linear(hidden_size)
-
         self.relu = nn.LeakyReLU()
 
 
