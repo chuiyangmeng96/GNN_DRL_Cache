@@ -131,6 +131,17 @@ class DDPG(nn.Module):
 
         return policy_loss, critic_loss
 
+class MADDPG(nn.Module):
+    def __init__(self, gh_input_size, gh_hidden_size, gh_output_size, gh_depth, gh_growth_rate, gh_reduction,
+                 gh_bottleneck,
+                 gh_dropRate, gh_num_head, gh_slope_alpha, gh_bias,
+                 actor_hidden_size=100, critic_hidden_size=100, gamma=0.99, tau=0.01,
+                 actor_learning_rate=1e-4, critic_learning_rate=1e-3,
+                 max_memory_size=50000):
+        super(MADDPG, self).__init__()
+
+
+
 '''
 def compute_loss(batch_size, gamma):
     state, action, reward, next_state = replaymemory.sample(batch_size)
