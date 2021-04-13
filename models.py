@@ -37,7 +37,7 @@ class Critic(nn.Module):
     def __init__(self, s_dim, hidden_size, a_dim):
         super(Critic, self).__init__()
 
-        self.fc1 = nn.Linear(s_dim, hidden_size)
+        self.fc1 = nn.Linear(s_dim + a_dim, hidden_size)
         self.fc1.weight.data.normal_(0, 0.1)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
         self.fc2.weight.data.normal_(0, 0.1)
@@ -62,6 +62,7 @@ class MACritic(nn.Module):
         self.fc1 = nn.Linear(obs_dim, hidden_size)
         self.fc1.weight.data.normal_(0, 0.1)
         self.fc2 = nn.Linear(hidden_size)
+        self.fc3 = nn.Linear(hidden_size, 1)
         self.relu = nn.LeakyReLU()
 
 
