@@ -66,7 +66,15 @@ class MACritic(nn.Module):
         self.relu = nn.LeakyReLU()
 
     def forward(self, state, action):
+        x = torch.cat([state, action], 1)
+        x = self.relu(self.fc1(x))
+        x = self.relu(self.fc2(x))
+        x = self.fc3(x)
 
+        q_value = x
+
+
+        return q_value
 
 
 class DDPG(nn.Module):
