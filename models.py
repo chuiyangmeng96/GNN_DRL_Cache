@@ -65,7 +65,6 @@ class MACritic(nn.Module):
         self.fc3 = nn.Linear(hidden_size, 1)
         self.relu = nn.LeakyReLU()
 
-
     def forward(self, state, action):
 
 
