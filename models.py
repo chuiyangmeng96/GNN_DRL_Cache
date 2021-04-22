@@ -61,7 +61,7 @@ class MACritic(nn.Module):
         act_dim = a_dim * num_agent
         self.fc1 = nn.Linear(obs_dim, hidden_size)
         self.fc1.weight.data.normal_(0, 0.1)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size + act_dim, hidden_size)
         self.fc2.weight.data.normal_(0, 0.1)
         self.fc3 = nn.Linear(hidden_size, 1)
         self.fc3.weight.data.normal_(0, 0.1)
