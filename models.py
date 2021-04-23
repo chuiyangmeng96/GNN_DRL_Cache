@@ -117,7 +117,12 @@ class DDPG(nn.Module):
         state = Variable(torch.from_numpy(state).float().unsqueeze(0))
         action = self.actor.forward(state)
         action = action.detach().numpy()[0, 0]
-        action =  # need revision
+        for i in range(action):
+            #### action needs revision
+            act =  torch.clamp(act, 0.0, 1.0)# need revision
+            action[i] = act
+        for i in range(action.shape[0]):
+            action[i] = action[i]/torch.sum(action)
         return action
 
     def update(self, batch_size):
