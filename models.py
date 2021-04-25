@@ -36,7 +36,6 @@ class Actor(nn.Module):
 class Critic(nn.Module):
     def __init__(self, s_dim, hidden_size, a_dim):
         super(Critic, self).__init__()
-
         self.fc1 = nn.Linear(s_dim + a_dim, hidden_size)
         self.fc1.weight.data.normal_(0, 0.1)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
@@ -119,6 +118,7 @@ class DDPG(nn.Module):
         action = action.detach().numpy()[0, 0]
         for i in range(action):
             #### action needs revision
+
             act =  torch.clamp(act, 0.0, 1.0)# need revision
             action[i] = act
         for i in range(action.shape[0]):
