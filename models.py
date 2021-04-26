@@ -43,15 +43,18 @@ class Critic(nn.Module):
         self.fc3 = nn.Linear(hidden_size, a_dim)
         self.fc3.weight.data.normal_(0, 0.1)
         self.relu = nn.LeakyReLU()
+        self.softmax = nn.Softmax()
 
     def forward(self, state, action):
         x = torch.cat([state, action], 1)
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.fc3(x)
+        x = self.softmax(x)
 
-        q_value = x   # need modification
+        q_value = x
         return q_value
+
 
 class MACritic(nn.Module):
     def __init__(self, num_agent, s_dim, hidden_size, a_dim):
@@ -65,16 +68,16 @@ class MACritic(nn.Module):
         self.fc3 = nn.Linear(hidden_size, 1)
         self.fc3.weight.data.normal_(0, 0.1)
         self.relu = nn.LeakyReLU()
+        self.softmax = nn.Softmax()
 
     def forward(self, state, action):
         x = torch.cat([state, action], 1)
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.fc3(x)
+        x = self.softmax()
 
         q_value = x
-
-
         return q_value
 
 
@@ -119,10 +122,10 @@ class DDPG(nn.Module):
         for i in range(action):
             #### action needs revision
 
-            act =  torch.clamp(act, 0.0, 1.0)# need revision
+            act = torch.clamp(act, 0.0, 1.0)# need revision
             action[i] = act
         for i in range(action.shape[0]):
-            action[i] = action[i]/torch.sum(action)
+            action[i] = action[i]/torch.sum(action) # normalization (action (cache portion) summation == 1)
         return action
 
     def update(self, batch_size):
