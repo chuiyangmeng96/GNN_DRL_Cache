@@ -22,13 +22,14 @@ class Actor(nn.Module):
         self.fc3 = nn.Linear(hidden_size, a_dim)
         self.fc3.weight.data.normal_(0, 0.1)
         self.relu = nn.LeakyReLU()
-        self.sigmoid = nn.Sigmoid()
+        # self.sigmoid = nn.Sigmoid()
+        self.softmax = nn.Softmax()
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
-        x = self.sigmoid(self.fc3(x))
-
+        # x = self.sigmoid(self.fc3(x))
+        x = self.softmax(self.fc3(x))  # sum up all actions to 1
         actions_value = x   # need modification
         return actions_value
 
@@ -36,6 +37,7 @@ class Actor(nn.Module):
 class Critic(nn.Module):
     def __init__(self, s_dim, hidden_size, a_dim):
         super(Critic, self).__init__()
+
         self.fc1 = nn.Linear(s_dim + a_dim, hidden_size)
         self.fc1.weight.data.normal_(0, 0.1)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
@@ -43,14 +45,14 @@ class Critic(nn.Module):
         self.fc3 = nn.Linear(hidden_size, a_dim)
         self.fc3.weight.data.normal_(0, 0.1)
         self.relu = nn.LeakyReLU()
-        self.softmax = nn.Softmax()
+        # self.softmax = nn.Softmax()
 
     def forward(self, state, action):
         x = torch.cat([state, action], 1)
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.fc3(x)
-        x = self.softmax(x)
+        # x = self.softmax(x)
 
         q_value = x
         return q_value
@@ -75,7 +77,7 @@ class MACritic(nn.Module):
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.fc3(x)
-        x = self.softmax()
+        # x = self.softmax()
 
         q_value = x
         return q_value
