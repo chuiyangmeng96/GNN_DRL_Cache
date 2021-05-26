@@ -124,7 +124,7 @@ class DDPG(nn.Module):
         action = action.detach().numpy()
         for i in range(action):
             #### action needs revision
-            action = torch.clamp(action, 0.0, 1.0) # need revision
+            action[i] = torch.clamp(action[i], 0.0, 1.0) # need revision
             action[i] = action[i] / torch.sum(action)
         return action
 
@@ -200,12 +200,10 @@ class MADDPG(nn.Module):
     def get_action(self, state):
         state = torch.FloatTensor(torch.from_numpy(state).float().unsqueeze(0))
         action = self.actor.forward(state)
-        action = action.detach().numpy()[0, 0]
+        action = action.detach().numpy()
         for i in range(action):
             #### action needs revision
-            act = torch.clamp(act, 0.0, 1.0) # need revision
-            action[i] = act
-        for i in range(action.shape[0]):
+            action[i] = torch.clamp(action, 0.0, 1.0) # need revision
             action[i] = action[i]/torch.sum(action) # normalization (action (cache portion) summation == 1)
         return action
 
