@@ -83,6 +83,7 @@ class MACritic(nn.Module):
         return q_value
 
 
+# DDPG main setup
 class DDPG(nn.Module):
     def __init__(self, gh_input_size, gh_hidden_size, gh_output_size, gh_depth, gh_growth_rate, gh_reduction, gh_bottleneck,
                  gh_dropRate, gh_num_head, gh_slope_alpha, gh_bias,
@@ -118,16 +119,13 @@ class DDPG(nn.Module):
         self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=critic_learning_rate)
 
     def get_action(self, state):
-        state = Variable(torch.from_numpy(state).float().unsqueeze(0))
+        state = torch.FloatTensor(torch.from_numpy(state).float().unsqueeze(0))
         action = self.actor.forward(state)
-        action = action.detach().numpy()[0, 0]
+        action = action.detach().numpy()
         for i in range(action):
             #### action needs revision
-
-            act = torch.clamp(act, 0.0, 1.0)# need revision
-            action[i] = act
-        for i in range(action.shape[0]):
-            action[i] = action[i]/torch.sum(action) # normalization (action (cache portion) summation == 1)
+            action = torch.clamp(action, 0.0, 1.0) # need revision
+            action[i] = action[i] / torch.sum(action)
         return action
 
     def update(self, batch_size):
@@ -165,6 +163,8 @@ class DDPG(nn.Module):
 
         return policy_loss, critic_loss
 
+
+# MADDPG main setup
 class MADDPG(nn.Module):
     def __init__(self, gh_input_size, gh_hidden_size, gh_output_size, gh_depth, gh_growth_rate, gh_reduction,
                  gh_bottleneck,
@@ -173,8 +173,41 @@ class MADDPG(nn.Module):
                  actor_learning_rate=1e-4, critic_learning_rate=1e-3,
                  max_memory_size=50000):
         super(MADDPG, self).__init__()
+        self.gamma = gamma
+        self.tau = tau
 
+        # Network setup
+        self.GraphDensenet = GraphDensenet(gh_input_size, gh_hidden_size, gh_output_size, gh_depth, gh_growth_rate, gh_reduction, gh_bottleneck,
+                 gh_dropRate, gh_num_head, gh_slope_alpha, gh_bias) # need revision
+        self.actor = Actor(self.num_states, actor_hidden_size, self.num_actions)
+        self.actor_target = Actor(self.num_states, actor_hidden_size, self.num_actions)
+        self.critic = Critic(self.num_states + self.num_actions, critic_hidden_size, self.num_actions)
+        self.critic_target = Critic(self.num_states + self.num_actions, critic_hidden_size, self.num_actions)
+        #   need modification
 
+        for target_param, param in zip(self.actor_target.parameters(), self.actor.parameters()):
+            target_param.data.copy_(param.data)
+
+        for target_param, param in zip(self.critic_target.parameters(), self.critic.parameters()):
+            target_param.data.copy_(param.data)
+
+        # training stage
+        self.memory = ReplayMemory(max_memory_size)
+        self.critic_criterion = nn.MSELoss()
+        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=actor_learning_rate)
+        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=critic_learning_rate)
+
+    def get_action(self, state):
+        state = torch.FloatTensor(torch.from_numpy(state).float().unsqueeze(0))
+        action = self.actor.forward(state)
+        action = action.detach().numpy()[0, 0]
+        for i in range(action):
+            #### action needs revision
+            act = torch.clamp(act, 0.0, 1.0) # need revision
+            action[i] = act
+        for i in range(action.shape[0]):
+            action[i] = action[i]/torch.sum(action) # normalization (action (cache portion) summation == 1)
+        return action
 
 '''
 def compute_loss(batch_size, gamma):
