@@ -823,7 +823,7 @@ class Environ:
         return total_delay
 
     def action_space(self): # action_matrix is a matrix of size self.vehicle_num * (self.vehicle_num + self.RSU_num + 1)
-        action_matrix = np.random.rand(np.zeros(self.vehicle_num))
+        action_matrix = np.random.rand(np.zeros(self.vehicle_num, self.vehicle_num + self.RSU_num + 1)) # need revision
         return action_matrix
 
 
@@ -863,6 +863,9 @@ class Environ:
         self.update_position()
         self.cal_neighbor()
         # need modification
+
+
+
 
         self.immediate_reward()
         # generate input state
