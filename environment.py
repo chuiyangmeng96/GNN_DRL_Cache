@@ -840,15 +840,13 @@ class Environ:
                 pf = pow(j + 1, -self.z) / deno
                 reward_arr[i][j] = 20/(pf * total_delay[i])
         R = -np.sum(reward_arr)
-        return R
 
-    def step(self, action_matrix):  # action set size self.vehicle_num*(self.vehicle_num + self.RSU_num + 1)
         for i in range(self.vehicle_num):
             if action_matrix[i][self.vehicle_num + self.RSU_num] != 0:  # define extra penalty when receiving content from MBS
-                r = -100
+                R[i] = -100
             else:
-                r = 1 # need modification
-        return r
+                R[i] = 1  # need modification
+        return R
 
     def packet_loss_func(self, total_delay): # change state by changing content distribution, T refers to delivery time of each vehicle (N*1)
         for i in range(self.vehicle_num):
@@ -863,9 +861,9 @@ class Environ:
         self.update_position()
         self.cal_neighbor()
         # need modification
-
-
-
+        self.action_space()
+        # self.step()
 
         self.immediate_reward()
         # generate input state
+        self.packet_loss_func()
