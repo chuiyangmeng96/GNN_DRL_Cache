@@ -57,6 +57,7 @@ for episode in range(num_episode):
         next_state = env.caching_strategy() # need modification
         next_state, reward = env.step(action)  # step no longer exists
         agent.memory.push(state, action, reward, next_state)
+        state = next_state
 
         if len(agent.memory) > batch_size:   # ReplayMemory need modification
             agent.update(batch_size)
